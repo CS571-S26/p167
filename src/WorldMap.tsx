@@ -49,7 +49,7 @@ const WorldMap: React.FC = () => {
         const layer = e.target;
         layer.setStyle(DEFAULT_STYLE); // Works better in React than resetStyle
       },
-      click: (e: LeafletMouseEvent) => {
+      click: () => {
         const countryCode = feature.properties.ISO_43 || feature.properties.name;
         navigate(`/country/${countryCode}`);
         

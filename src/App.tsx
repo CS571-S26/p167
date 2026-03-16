@@ -1,6 +1,4 @@
-import React from 'react';
-import WorldMap from './WorldMap';
-import { Container, Row, Col, Navbar, Nav} from "react-bootstrap"
+import { Container, Navbar, Nav} from "react-bootstrap"
 import { Routes, Route, Link } from 'react-router-dom';
 import Home from './pages/Home';
 import About from './pages/About';
