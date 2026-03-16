@@ -51,11 +51,9 @@
 }
 
 #root {
-  width: 1126px;
-  max-width: 100%;
-  margin: 0 auto;
-  text-align: center;
-  border-inline: 1px solid var(--border);
+  width: 100%;
+  margin: 0;            
+  text-align: left;       
   min-height: 100svh;
   display: flex;
   flex-direction: column;
@@ -108,4 +106,32 @@ code {
   line-height: 135%;
   padding: 4px 8px;
   background: var(--code-bg);
+}
+
+.map-page-wrapper {
+  box-sizing: 0;
+  border-inline: 0;
+  width: 100vw;
+  height: calc(100vh - 64px); 
+  overflow: hidden;
+  display: block;
+}
+
+/* 3. Ensure the Map inside this wrapper fills it */
+.map-page-wrapper .leaflet-container {
+  height: 100%;
+  width: 100%;
+}
+
+
+.content-container, .home-page, .about-page {
+  width: 1126px;
+  max-width: 100%;
+  margin: 0 auto;
+  text-align: center;
+  border-inline: 1px solid var(--border);
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
 }

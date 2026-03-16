@@ -1,0 +1,21 @@
+// pages/CountryDetail.tsx
+import { useParams, useNavigate } from 'react-router-dom';
+import { Button, Container } from 'react-bootstrap';
+
+const CountryNews = () => {
+  const { id } = useParams(); // Grabs the country name from the URL
+  const navigate = useNavigate();
+
+  return (
+    <Container className="content-container">
+      <h1>Details for: {id}</h1>
+      <p>This is where you would fetch data from an API about {id}.</p>
+      
+      <Button variant="primary" onClick={() => navigate('/map')}>
+        Back to Map
+      </Button>
+    </Container>
+  );
+};
+
+export default CountryNews;
