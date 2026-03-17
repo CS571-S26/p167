@@ -8,8 +8,8 @@ const CountryNews = () => {
 
   return (
     <Container className="content-container">
-      <h1>Details for: {id}</h1>
-      <p>This is where you would fetch data from an API about {id}.</p>
+      <h1>News for {id}</h1>
+      <p>There will be a call here to serve news from an API about {id}</p>
       
       <Button variant="primary" onClick={() => navigate('/map')}>
         Back to Map

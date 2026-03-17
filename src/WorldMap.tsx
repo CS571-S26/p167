@@ -7,8 +7,8 @@ import 'leaflet/dist/leaflet.css';
 const DEFAULT_STYLE: PathOptions = {
   fillColor: "#d1d1d1",
   color: "#333333",
-  weight: 1.5,
-  fillOpacity: 0.6
+  weight: 0.5,
+  fillOpacity: 0
 };
 
 const HOVER_STYLE: PathOptions = {
@@ -58,7 +58,7 @@ const WorldMap: React.FC = () => {
   };
 
   return (
-    <MapContainer 
+    <MapContainer
         center={[0, 0]} 
         zoom={3} 
         style={{height: 'calc(100vh - 56px)', width: "100%"}}

@@ -7,14 +7,15 @@ import CountryNews from "./pages/CountryNews"
 
 function App() {
   return (
-    <Container fluid>
-      {/* content-container is a custom css look that makes text pages more readable */}
-      <Navbar>
-        <Nav>
-          <Nav.Link as={Link} to="/">Home</Nav.Link>
-          <Nav.Link as={Link} to="/map ">Map</Nav.Link>
-          <Nav.Link as={Link} to="/about">About</Nav.Link>
-        </Nav>
+    <>
+      <Navbar bg="dark" variant="dark">
+        <Container fluid>
+          <Nav>
+            <Nav.Link as={Link} to="/">Home</Nav.Link>
+            <Nav.Link as={Link} to="/map ">Map</Nav.Link>
+            <Nav.Link as={Link} to="/about">About</Nav.Link>
+          </Nav>
+        </Container>
       </Navbar>
       <Routes>
         <Route path="/" element={<Home />} />
@@ -22,7 +23,8 @@ function App() {
         <Route path="/about" element={<About />} />
         <Route path="/country/:id" element={<CountryNews />} />
       </Routes>
-    </Container>
+      
+    </>
   );
   
 }
