@@ -134,14 +134,14 @@ code {
   display: block;
 }
 
-.map-page-wrapper-dark .leaflet-container {
+.map-page-wrapper-dark  {
   height: 100%;
   width: 100%;
   background-color: var(--dark4) !important;
   transition: background-color 0.3s ease; /* Smooth transition when switching */
 }
 
-.map-page-wrapper-light .leaflet-container {
+.map-page-wrapper-light {
   height: 100%;
   width: 100%;
   background-color: var(--light1) !important;

@@ -1,3 +1,5 @@
+import 'leaflet';
+
 export interface Article {
     article_id: string;
     title: string;
@@ -12,4 +14,11 @@ export interface APIResponse {
     totalResults: number;
     results: Article[];
     nextPage?: string;
+}
+
+declare module 'leaflet' {
+  interface MapOptions {
+    smoothWheelZoom?: boolean | string;
+    smoothSensitivity?: number;
+  }
 }

@@ -4,6 +4,7 @@ import L, { type LeafletMouseEvent, type PathOptions } from 'leaflet';
 import { useNavigate } from "react-router-dom"
 import 'leaflet/dist/leaflet.css';
 import ThemeContext from "../contexts/ThemeContext"
+import '@luomus/leaflet-smooth-wheel-zoom';
 
 const WorldMap: React.FC = () => {
   const [theme] = useContext(ThemeContext) || ["dark"];
@@ -18,7 +19,7 @@ const WorldMap: React.FC = () => {
     // Labels apply only when dark mode is applied, the landTiles for light mode already has labels included
   const labelTiles = "https://{s}.basemaps.cartocdn.com/dark_only_labels/{z}/{x}/{y}{r}.png";
   
-   const DEFAULT_STYLE: PathOptions = { 
+  const DEFAULT_STYLE: PathOptions = { 
       fillColor:  theme === "dark" ? "#00000000" : "#00440c",
       color:  theme === "dark" ? "#6a6a6a" : "#444444",
       weight: 1.5,
@@ -66,15 +67,21 @@ const WorldMap: React.FC = () => {
   
   return (
     <MapContainer
+        // key={theme}
         center={[30, 0]} 
         zoom={3} 
         style={{height: 'calc(100vh - 64px)', width: "100%"}}
-        minZoom={2.4}
+        minZoom={2}
         maxZoom={20}
+        wheelDebounceTime={10}   // Reduces the "lag" feel between scroll increments
         maxBounds={[[-90, -180], [90, 180]]} // Locks the view to one world width
         maxBoundsViscosity={1.0}            // Makes the edge "hard" (no bouncing)
         worldCopyJump={false}               // Prevents jumping to a copy of the world
+        scrollWheelZoom={false} // Disable default scroll
+        smoothWheelZoom={true}  // Enable the smooth scrolling plugin
+        smoothSensitivity={5}  // Adjust this for scrolling speed (smaller number is slower, higher number is faster)
         >
+
         {/* Layer 1: The Base (Land and Water) */}
         <TileLayer
           url={landTiles}
