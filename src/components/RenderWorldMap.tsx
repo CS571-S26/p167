@@ -5,25 +5,26 @@ import { useNavigate } from "react-router-dom"
 import 'leaflet/dist/leaflet.css';
 import ThemeContext from "../contexts/ThemeContext"
 import '@luomus/leaflet-smooth-wheel-zoom';
+import { useMap } from 'react-leaflet';
 
-const WorldMap: React.FC = () => {
+const RenderWorldMap: React.FC = () => {
   const [theme] = useContext(ThemeContext) || ["dark"];
   const navigate = useNavigate();
   const [geoData, setGeoData] = useState<any>(null);
 
-    // Define the tiles based on what the theme is
+  // Define the tiles based on what the theme is
    const landTiles = theme === "dark"
     ? "https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png"
-    : "https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}";
+    : "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png";
 
-    // Labels apply only when dark mode is applied, the landTiles for light mode already has labels included
+  // Labels apply only when dark mode is applied, the landTiles for light mode already has labels included
   const labelTiles = "https://{s}.basemaps.cartocdn.com/dark_only_labels/{z}/{x}/{y}{r}.png";
   
   const DEFAULT_STYLE: PathOptions = { 
-      fillColor:  theme === "dark" ? "#00000000" : "#00440c",
+      fillColor:  theme === "dark" ? "transparent" : "#8daa92",
       color:  theme === "dark" ? "#6a6a6a" : "#444444",
       weight: 1.5,
-      fillOpacity: 0.3
+      fillOpacity: 0.5
     };
 
     const HOVER_STYLE: PathOptions = {
@@ -39,6 +40,27 @@ const WorldMap: React.FC = () => {
       .then(data => {setGeoData(data)})
       .catch(err => console.error("Fetch error:", err));
   }, []);
+
+    // Update the map to prevent ghosting when switches themes
+  const ThemeSync = ({ theme }: { theme: string }) => {
+    const map = useMap();
+
+    useEffect(() => {
+      // Tell Leaflet the container might have changed size/style
+      map.invalidateSize();
+
+      // Forcing a tiny move resynchronizes the TileLayer and GeoJSON
+      const currentCenter = map.getCenter();
+      const currentZoom = map.getZoom();
+      
+      // Nudge the map view to force a full redraw of the coordinate system
+      map.setView(currentCenter, currentZoom, { animate: false });
+      
+  }, [theme, map]);
+
+  return null;
+  };
+
 
  const onEachCountry = useCallback((feature: any, layer: L.Layer) => {
     layer.bindTooltip(feature.properties.name, { 
@@ -67,7 +89,6 @@ const WorldMap: React.FC = () => {
   
   return (
     <MapContainer
-        // key={theme}
         center={[30, 0]} 
         zoom={3} 
         style={{height: 'calc(100vh - 64px)', width: "100%"}}
@@ -81,6 +102,8 @@ const WorldMap: React.FC = () => {
         smoothWheelZoom={true}  // Enable the smooth scrolling plugin
         smoothSensitivity={5}  // Adjust this for scrolling speed (smaller number is slower, higher number is faster)
         >
+
+        <ThemeSync theme={theme}/>
 
         {/* Layer 1: The Base (Land and Water) */}
         <TileLayer
@@ -114,4 +137,4 @@ const WorldMap: React.FC = () => {
   );
 };
 
-export default WorldMap;
+export default RenderWorldMap;

@@ -1,23 +1,28 @@
 import { useState, useEffect, useContext } from "react"
 import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
-import { Button, Container, Row } from 'react-bootstrap';
+import { Button, Container, Row} from 'react-bootstrap';
 import NewsCard from "../NewsCard.tsx"
 import type { APIResponse } from "../../types.ts"
 import countryToLang from '../../languages.json';
-import { supabase } from '../../supabaseClient'
-import ThemeContext from "../../contexts/ThemeContext"
+import { supabase } from '../../supabaseClient.ts'
+import ThemeContext from "../../contexts/ThemeContext.ts"
 
-const CountryNews = () => {
+const News = () => {
   const [theme] = useContext(ThemeContext) || ["dark"];
   const [loading, setLoading] = useState<boolean>(true);
   const [category, setCategory] = useState<string>('top');
   const [data, setData] = useState<APIResponse | null>(null);
   const { countryName } = useParams<{ countryName: string }>(); // Get the country name from the URL
+  const { stateName } = useParams<{stateName: string}>(); // Get the state name from the URL, if it is there
   const [searchParams] = useSearchParams();
   let isoCode: string = searchParams.get('iso') || ''; // Get the ISO short code for API fetch request
   const navigate = useNavigate();
   const countryLanguage = (countryToLang as Record<string, string>)[isoCode.toLowerCase()] || 'en';
 
+  // TODO: Remove this when implementation of secondary API is done
+  if(stateName) {
+    return <h1>News for individual US States is coming soon</h1>
+  }
 
   // Handle API issues
   if(isoCode == "SS") {
@@ -31,9 +36,16 @@ const CountryNews = () => {
   const fetchData = async () => {
     const { data, error } = await supabase.functions.invoke('news-proxy', {
       body: { 
+        // Only passes the value if it exists
         isoCode: isoCode, 
         countryLanguage: countryLanguage,
-        category: category
+        category: category,
+
+        // Conditional logic for US States map
+        ...(stateName && { 
+          region: stateName,
+          isoCode: "US"
+        })
       }
     })
 
@@ -90,7 +102,9 @@ useEffect(() => {
       <div>
       {data && data.results && data.results.length > 0 ?
       <Row>{data.results.map(s => <NewsCard key={s.article_id} article={s} />)}</Row> :
-      <p>There is no current news for {countryName}</p>
+      stateName 
+        ? <p>There is no current news for {stateName}</p>
+        : <p>There is no current news for {countryName}</p>
       }
       </div>
     }
@@ -99,4 +113,4 @@ useEffect(() => {
   );
 };
 
-export default CountryNews;
+export default News;

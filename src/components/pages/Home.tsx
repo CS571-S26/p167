@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import ThemeContext from '../../contexts/ThemeContext';
-import { Button } from 'react-bootstrap';
+import { Button, Stack } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 
 const Home: React.FC = () => {
@@ -51,13 +51,27 @@ const Home: React.FC = () => {
             ))}
           </div>
 
+         <Stack 
+          direction="vertical" 
+          gap={3} 
+          className="flex-md-row justify-content-center mt-4 align-items-center"
+        >
           <Button 
-            variant={theme === "dark" ? "primary" : "dark"} // Toggle button color
-            className="btn-lg rounded-pill px-5 py-3 fw-bold shadow-lg mt-3"
-            onClick={() => navigate("/map")}
+            variant={theme === "dark" ? "primary" : "dark"}
+            className="btn-lg rounded-pill px-5 py-3 fw-bold shadow-lg w-100 w-md-auto"
+            onClick={() => navigate("/worldmap")}
           >
-            Start Exploring
+            Start Exploring The World
           </Button>
+
+          <Button 
+            variant={theme === "dark" ? "primary" : "dark"}
+            className="btn-lg rounded-pill px-5 py-3 fw-bold shadow-lg w-100 w-md-auto"
+            onClick={() => navigate("/usamap")}
+          >
+            Start Exploring The USA
+          </Button>
+        </Stack>
         </div>
       </main>
       

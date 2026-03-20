@@ -1,14 +1,13 @@
-import WorldMap from '../WorldMap';
+import RenderWorldMap from '../RenderWorldMap';
 import ThemeContext from "../../contexts/ThemeContext"
 import { useContext } from "react"
 
-const MapPage = () => {
+const WorldMap = () => {
   const [theme] = useContext(ThemeContext) || ["dark"];
 
   return <div className={`map-page-wrapper-${theme}`}>
-    {/* TODO: Maybe add a sidebar here */}
-    <WorldMap />
+    <RenderWorldMap />
   </div>
 };
 
-export default MapPage;
+export default WorldMap;

@@ -3,8 +3,9 @@ import { Routes, Route, Link } from 'react-router-dom';
 import  { useState, useEffect } from "react"
 import Home from './pages/Home';
 import About from './pages/About';
-import MapPage from './pages/MapPage';
-import CountryNews from "./pages/CountryNews"
+import WorldMap from './pages/WorldMap';
+import USAMap from "./pages/USAMap"
+import News from "./pages/News"
 import ThemeContext from "../contexts/ThemeContext"
 
 function App() {
@@ -27,7 +28,8 @@ function App() {
           {/* Items on the left of the navbar */}
           <Nav className={`me-auto`}>
             <Nav.Link as={Link} to="/">Home</Nav.Link>
-            <Nav.Link as={Link} to="/map ">Map</Nav.Link>
+            <Nav.Link as={Link} to="/worldmap ">World Map</Nav.Link>
+            <Nav.Link as={Link} to="/usamap">US States Map</Nav.Link>
             <Nav.Link as={Link} to="/about">About</Nav.Link>
           </Nav>
 
@@ -47,9 +49,11 @@ function App() {
       </Navbar>
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/map" element={<MapPage />} />
+        <Route path="/worldmap" element={<WorldMap/>} />
         <Route path="/about" element={<About />} />
-        <Route path="/news/:countryName" element={<CountryNews />} /> 
+        <Route path="/usamap/" element={<USAMap/>} ></Route>
+        <Route path="/news/:countryName" element={<News />} />
+        <Route path="/news/United States/:stateName" element={<News />} />
       </Routes>
       
     </ThemeContext.Provider>
