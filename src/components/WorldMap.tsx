@@ -11,39 +11,26 @@ const WorldMap: React.FC = () => {
   const [geoData, setGeoData] = useState<any>(null);
 
     // Define the tiles based on what the theme is
-    const landTiles = theme === "dark"
+   const landTiles = theme === "dark"
     ? "https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png"
-    : "https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png";
+    : "https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}";
 
-    const labelTiles = theme === "dark"
-    ? "https://{s}.basemaps.cartocdn.com/dark_only_labels/{z}/{x}/{y}{r}.png"
-    : "https://{s}.basemaps.cartocdn.com/rastertiles/voyager_only_labels/{z}/{x}/{y}{r}.png";
-    
-    const DEFAULT_STYLE: PathOptions = theme === "dark" ? {
-      fillColor: "#000000",
-      color: "#6a6a6a",
-      weight: 0.5,
-      fillOpacity: 0
-    } :
-    { 
-      fillColor: "#2E6F40",
-      color: "#2a2a2a",
-      weight: 0.5,
-      fillOpacity: 0.5,
+    // Labels apply only when dark mode is applied, the landTiles for light mode already has labels included
+  const labelTiles = "https://{s}.basemaps.cartocdn.com/dark_only_labels/{z}/{x}/{y}{r}.png";
+  
+   const DEFAULT_STYLE: PathOptions = { 
+      fillColor:  theme === "dark" ? "#00000000" : "#00440c",
+      color:  theme === "dark" ? "#6a6a6a" : "#444444",
+      weight: 1.5,
+      fillOpacity: 0.3
     };
 
-    const HOVER_STYLE: PathOptions = theme === "dark" ? {
-      fillColor: "#4fd9ff",
-      color: "#0056cf",
-      weight: 3,
-      fillOpacity: 0.5
-    } :
-    {
-      fillColor: "#ffffff",
-      color: "#0056cf",
-      weight: 3,
-      fillOpacity: 0.5
-    };
+    const HOVER_STYLE: PathOptions = {
+    fillColor: theme === "dark" ? "#4fd9ff" : "#007bff",
+    color: "#0056cf",
+    weight: 2,
+    fillOpacity: 0.3
+  };
 
   useEffect(() => {
     fetch('https://raw.githubusercontent.com/datasets/geo-boundaries-world-110m/master/countries.geojson')
@@ -95,11 +82,13 @@ const WorldMap: React.FC = () => {
         />
 
         {/* Layer 2: The Text (Cities and Countries) */}
-        <TileLayer
-          url={labelTiles}
-          zIndex={10} // Ensures labels stay on top of everything else
-          pane="markerPane"
-        />
+        {theme === "dark" && (
+          <TileLayer
+            url={labelTiles}
+            zIndex={10}
+            pane="markerPane"
+          />
+        )}
 
         {geoData && (
         <GeoJSON 

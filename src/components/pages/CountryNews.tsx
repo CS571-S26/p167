@@ -2,7 +2,7 @@ import { useState, useEffect, useContext } from "react"
 import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import { Button, Container, Row } from 'react-bootstrap';
 import NewsCard from "../NewsCard.tsx"
-import type { Article, APIResponse } from "../../types.ts"
+import type { APIResponse } from "../../types.ts"
 import countryToLang from '../../languages.json';
 import { supabase } from '../../supabaseClient'
 import ThemeContext from "../../contexts/ThemeContext"
