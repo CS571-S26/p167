@@ -1,5 +1,4 @@
-# H1
-World News Mapper
+# World News Mapper
 
 ## Description
 This project allows you to explore news in different countries around the globe through an intuitive interface. Using a React Leaflet map, you can click on any nation on the map and be taken to a page showing you the news from that country.
