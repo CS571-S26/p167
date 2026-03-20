@@ -9,7 +9,7 @@ import ThemeContext from "../contexts/ThemeContext"
 
 function App() {
   const [theme, setTheme] = useState("dark");
-  // TODO: Add localStorage / sessionStorage for theme
+  // TODO: Add localStorage / sessionStorage for themenp
   // TODO: Maybe add a US state version
 
   // Change the background color of the whole document
