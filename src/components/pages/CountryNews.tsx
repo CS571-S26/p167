@@ -48,7 +48,6 @@ const CountryNews = () => {
 // Reload the page on initial mount and when the user selects a new category
 useEffect(() => {
   fetchData();
-  console.log(category);
   }, [category]);
 
   return (

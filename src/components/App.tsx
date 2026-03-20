@@ -8,12 +8,14 @@ import CountryNews from "./pages/CountryNews"
 import ThemeContext from "../contexts/ThemeContext"
 
 function App() {
-  const [theme, setTheme] = useState("dark");
-  // TODO: Add localStorage / sessionStorage for themenp
-  // TODO: Maybe add a US state version
+  const [theme, setTheme] = useState(() => {
+    const storedTheme = localStorage.getItem("webproject-theme");
+    return storedTheme ? storedTheme : "dark";
+  });
 
-  // Change the background color of the whole document
+  // Update local storage when the theme changes and change the page background
   useEffect(() => {
+    localStorage.setItem("webproject-theme", theme);
     document.body.className = `bg-page-${theme}`;
   }, [theme]);
 

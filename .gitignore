@@ -26,8 +26,11 @@ dist-ssr
 .env.development
 .env.production
 .env.local
-.directions
 
 # Supabase local files
 supabase/.temp/
 supabase/.branches/
+
+# Development text files / notes
+directions.txt
+todo.txt
