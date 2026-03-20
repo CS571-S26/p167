@@ -1,7 +1,24 @@
+/* Dark mode color scheme
+Light (1) to dark (4)
+1. #909EAE
+2. #687A8F
+3. #435161
+4. #152638 -> Background color
+ */
+
 :root {
   --text: #6b6375;
   --text-h: #08060d;
-  --bg: #fff;
+  --bg: #152638;
+  --dark1: #909EAE;
+  --dark2: #687A8F;
+  --dark3: #435161;
+  --dark4: #152638;
+  --light1: #F8FAFC;
+  --light2: #D9EAFD;
+  --light3: #BCCCDC;
+  --light4: #9AA6B2;
+  --light-text: #212529;
   --border: #e5e4e7;
   --code-bg: #f4f3ec;
   --accent: #aa3bff;
@@ -117,10 +134,18 @@ code {
   display: block;
 }
 
-/* 3. Ensure the Map inside this wrapper fills it */
-.map-page-wrapper .leaflet-container {
+.map-page-wrapper-dark .leaflet-container {
   height: 100%;
   width: 100%;
+  background-color: var(--dark4) !important;
+  transition: background-color 0.3s ease; /* Smooth transition when switching */
+}
+
+.map-page-wrapper-light .leaflet-container {
+  height: 100%;
+  width: 100%;
+  background-color: var(--light1) !important;
+  transition: background-color 0.3s ease; /* Smooth transition when switching */
 }
 
 
@@ -129,9 +154,128 @@ code {
   max-width: 100%;
   margin: 0 auto;
   text-align: center;
-  border-inline: 1px solid var(--border);
+  /* border-inline: 1px solid var(--border); */
   min-height: 100svh;
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
+}
+
+.unstyled-link {
+  /* Remove default blue color and underline */
+  color: inherit;
+  text-decoration: none;
+  
+  /* Ensure the link takes up the space of its contents */
+  display: contents; 
+}
+
+.unstyled-link:hover, 
+.unstyled-link:focus, 
+.unstyled-link:visited, 
+.unstyled-link:active {
+  color: inherit;
+  text-decoration: none;
+}
+
+.truncate-text {
+  display: -webkit-box;
+  -webkit-line-clamp: 5; /* Number of lines to show */
+  -webkit-box-orient: vertical;  
+  overflow: hidden;
+}
+
+#intro-blurb {
+  font-size:xx-large;
+}
+
+
+/* Make the Leaflet labels pop with a slight glow */
+.leaflet-tile-pane {
+    filter: brightness(1.2) contrast(1.1);
+}
+
+.news-page-dark {
+  width: 1126px;
+  max-width: 100%;
+  margin: 0 auto;
+  text-align: center;
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+ background-color: var(--dark4)!important;
+ transition: background-color 0.3s ease; /* Smooth transition when switching */
+}
+
+.news-page-light {
+  width: 1126px;
+  max-width: 100%;
+  margin: 0 auto;
+  text-align: center;
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+ background-color: var(--light1) !important;
+ transition: background-color 0.3s ease; /* Smooth transition when switching */
+}
+
+.news-card-dark {
+  border: 10px solid;
+  border-radius: 25px !important;
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+  overflow: hidden;
+  height: 100%;
+  background-color: var(--dark3) !important;
+  color: #f8f9fa !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  transition: background-color 0.3s ease; /* Smooth transition when switching */
+}
+
+.news-card-light {
+  border: none;
+  border-radius: 25px !important;
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+  overflow: hidden;
+  height: 100%;
+  background-color: var(--light2) !important;
+  color: #212529 !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transition: background-color 0.3s ease; /* Smooth transition when switching */
+}
+
+.card-img-top {
+  height: 300px;
+  object-fit: cover;
+}
+
+/* Navbar color dark scheme */
+.bg-custom-dark {
+  background-color: var(--dark4);
+  transition: background-color 0.3s ease; /* Smooth transition when switching */
+}
+
+/* Navbar color light scheme */
+.bg-custom-light {
+  background-color: var(--light1);
+  transition: background-color 0.3s ease; /* Smooth transition when switching */
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  transition: background-color 0.3s ease; /* Smooth transition when switching */
+}
+
+.bg-page-light {
+  background-color: var(--light1);
+  color: #212529;
+  transition: background-color 0.3s ease; /* Smooth transition when switching */
+}
+
+.bg-page-dark {
+  background-color: var(--dark4);
+  color: #ffffff;
+  transition: background-color 0.3s ease; /* Smooth transition when switching */
 }

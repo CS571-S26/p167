@@ -1,0 +1,103 @@
+import { useState, useEffect, useContext } from "react"
+import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
+import { Button, Container, Row } from 'react-bootstrap';
+import NewsCard from "../NewsCard.tsx"
+import type { Article, APIResponse } from "../../types.ts"
+import countryToLang from '../../languages.json';
+import { supabase } from '../../supabaseClient'
+import ThemeContext from "../../contexts/ThemeContext"
+
+const CountryNews = () => {
+  const [theme] = useContext(ThemeContext) || ["dark"];
+  const [loading, setLoading] = useState<boolean>(true);
+  const [category, setCategory] = useState<string>('top');
+  const [data, setData] = useState<APIResponse | null>(null);
+  const { countryName } = useParams<{ countryName: string }>(); // Get the country name from the URL
+  const [searchParams] = useSearchParams();
+  let isoCode: string = searchParams.get('iso') || ''; // Get the ISO short code for API fetch request
+  const navigate = useNavigate();
+  const countryLanguage = (countryToLang as Record<string, string>)[isoCode.toLowerCase()] || 'en';
+
+
+  // Handle API issues
+  if(isoCode == "SS") {
+    isoCode = "SD"; // Fixes issue with South Sudan by showing Sudan news, South Sudan is not handled by the API properly
+  }
+  if (isoCode == "GL") {
+    isoCode = "DK" // Convert Greenland's iso code to Denmark's
+  }
+
+  // Get the data from the news API
+  const fetchData = async () => {
+    const { data, error } = await supabase.functions.invoke('news-proxy', {
+      body: { 
+        isoCode: isoCode, 
+        countryLanguage: countryLanguage,
+        category: category
+      }
+    })
+
+  if (error) {
+    console.error('Error fetching news:', error)
+  } else {
+    setData(data);
+    setLoading(false);
+  }
+}
+
+// Reload the page on initial mount and when the user selects a new category
+useEffect(() => {
+  fetchData();
+  console.log(category);
+  }, [category]);
+
+  return (
+    <Container className={`news-page-${theme}`}>
+      <h1>News for {countryName}</h1>
+      <Button variant="primary" onClick={() => navigate('/map')}>
+        Back to Map
+      </Button>
+      
+      <hr/>
+      {/* Category Filters */}
+      <div className="category-filters mb-4">
+        <Button 
+          variant={category === 'top' ? 'primary' : 'outline-primary'} 
+          onClick={() => setCategory('top')}
+          className="me-2"
+        >
+          Top News
+        </Button>
+
+        <Button 
+          variant={category === 'politics' ? 'primary' : 'outline-primary'} 
+          onClick={() => setCategory('politics')}
+          className="me-2"
+        >
+          Politics
+        </Button>
+
+        <Button 
+          variant={category === 'technology' ? 'primary' : 'outline-primary'} 
+          onClick={() => setCategory('technology')}
+        >
+          Tech
+        </Button>
+      </div>
+      
+      {loading ? 
+      <p>The news is current loading</p>
+      :
+      <div>
+      {data && data.results && data.results.length > 0 ?
+      <Row>{data.results.map(s => <NewsCard key={s.article_id} article={s} />)}</Row> :
+      <p>There is no current news for {countryName}</p>
+      }
+      </div>
+    }
+     
+    </Container>
+  );
+};
+
+export default CountryNews;
