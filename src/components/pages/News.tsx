@@ -1,6 +1,6 @@
 import { useState, useEffect, useContext } from "react"
 import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
-import { Button, Container, Row} from 'react-bootstrap';
+import { Button, Container, Row, Col} from 'react-bootstrap';
 import NewsCard from "../NewsCard.tsx"
 import type { APIResponse } from "../../types.ts"
 import countryToLang from '../../languages.json';
@@ -65,7 +65,11 @@ useEffect(() => {
   return (
     <Container className={`news-page-${theme}`}>
       <h1>News for {countryName}</h1>
-      <Button variant="primary" onClick={() => navigate('/map')}>
+      <Button 
+        variant="primary"
+        onClick={() => navigate('/worldmap')}
+        className="rounded-pill px-4 me-2 shadow-sm"
+      >
         Back to Map
       </Button>
       
@@ -73,9 +77,9 @@ useEffect(() => {
       {/* Category Filters */}
       <div className="category-filters mb-4">
         <Button 
-          variant={category === 'top' ? 'primary' : 'outline-primary'} 
+          variant={category === 'top' ? 'primary' : 'outline-primary'}
           onClick={() => setCategory('top')}
-          className="me-2"
+          className="rounded-pill px-4 me-2 shadow-sm"
         >
           Top News
         </Button>
@@ -83,7 +87,7 @@ useEffect(() => {
         <Button 
           variant={category === 'politics' ? 'primary' : 'outline-primary'} 
           onClick={() => setCategory('politics')}
-          className="me-2"
+          className="rounded-pill px-4 me-2 shadow-sm"
         >
           Politics
         </Button>
@@ -91,13 +95,22 @@ useEffect(() => {
         <Button 
           variant={category === 'technology' ? 'primary' : 'outline-primary'} 
           onClick={() => setCategory('technology')}
+          className="rounded-pill px-4 me-2 shadow-sm"
         >
           Tech
         </Button>
       </div>
       
       {loading ? 
-      <p>The news is current loading</p>
+      (
+      <Row>
+        {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((i) => (
+          <Col key={i} xs={12} sm={12} md={6} lg={4} xl={4} className="mb-4">
+            <div className="skeleton-card" style={{ height: '300px', background: '#eee', borderRadius: '8px' }} />
+          </Col>
+        ))}
+      </Row>
+      )
       :
       <div>
       {data && data.results && data.results.length > 0 ?
