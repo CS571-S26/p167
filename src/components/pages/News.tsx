@@ -29,7 +29,7 @@ const News = () => {
     isoCode = "SD"; // Fixes issue with South Sudan by showing Sudan news, South Sudan is not handled by the API properly
   }
   if (isoCode == "GL") {
-    isoCode = "DK" // Convert Greenland's iso code to Denmark's
+    isoCode = "DK" // Convert Greenland's iso code to Denmark's, the API does not handle Greenland as a seperate country
   }
 
   // Get the data from the news API

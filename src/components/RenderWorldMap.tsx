@@ -6,6 +6,7 @@ import 'leaflet/dist/leaflet.css';
 import ThemeContext from "../contexts/ThemeContext"
 import '@luomus/leaflet-smooth-wheel-zoom';
 import { useMap } from 'react-leaflet';
+import countryToLang from '../languages.json';
 
 const RenderWorldMap: React.FC = () => {
   const [theme] = useContext(ThemeContext) || ["dark"];
@@ -82,10 +83,11 @@ const RenderWorldMap: React.FC = () => {
       click: () => {
         const isoShortCode = feature.properties.iso_a2;
         const countryName = feature.properties.name;
-        navigate(`/news/${countryName}?iso=${isoShortCode}`);
+        const countryLanguage = (countryToLang as Record<string, string>)[isoShortCode.toLowerCase()] || 'en';
+        navigate(`/news/${countryName}?iso=${isoShortCode}&lang=${countryLanguage}`);
       }
     });
-  }, [theme, navigate, DEFAULT_STYLE]); // Dependencies ensure the function updates
+  }, [theme, navigate, DEFAULT_STYLE]);
   
   return (
     <MapContainer
