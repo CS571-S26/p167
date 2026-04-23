@@ -8,6 +8,7 @@ export interface Article {
     image_url?: string | null;
     pubDate: string;
     source_name: string;
+    category: string[];
 }
 
 export interface APIResponse {

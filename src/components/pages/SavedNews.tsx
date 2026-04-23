@@ -73,7 +73,7 @@ const CountryNews = () => {
             >
               {savedArticles  && savedArticles.length > 0 ? (
                 <Row className="g-4">
-                  {savedArticles.map((s: Article)=> <NewsCard key={s.article_id} article={s} />)}
+                  {savedArticles.filter((s: Article) => s.category.includes(category)).map((s: Article)=> <NewsCard key={s.article_id} article={s} />)}
                 </Row>
               ) : 
               ((!user) ? 
