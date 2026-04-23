@@ -6,11 +6,17 @@ const corsHeaders = {
 }
 
 Deno.serve(async (req) => {
-  if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders })
+  if (req.method === 'OPTIONS') {
+  return new Response('ok', { 
+    status: 200,
+    headers: corsHeaders 
+  })
+}
 
   try {
     const { text, targetLanguage } = await req.json() // 'text' can be a string OR an array
     const apiKey = Deno.env.get('GOOGLE_TRANSLATE_API_KEY')
+    if (!apiKey) throw new Error("Missing API Key")
 
     const response = await fetch(
       `https://translation.googleapis.com/language/translate/v2?key=${apiKey}`,

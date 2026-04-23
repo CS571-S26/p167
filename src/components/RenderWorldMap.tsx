@@ -1,12 +1,13 @@
 import React, { useState, useEffect, useContext, useCallback} from 'react';
 import { MapContainer, TileLayer, GeoJSON } from 'react-leaflet';
 import L, { type LeafletMouseEvent, type PathOptions } from 'leaflet';
-import { useNavigate } from "react-router-dom"
+import { useNavigate } from "react-router-dom";
 import 'leaflet/dist/leaflet.css';
-import ThemeContext from "../contexts/ThemeContext"
+import ThemeContext from "../contexts/ThemeContext";
 import '@luomus/leaflet-smooth-wheel-zoom';
 import { useMap } from 'react-leaflet';
 import countryToLang from '../languages.json';
+import MapOverlay from "./MapOverlayCountries";
 
 const RenderWorldMap: React.FC = () => {
   const [theme] = useContext(ThemeContext) || ["dark"];
@@ -22,7 +23,7 @@ const RenderWorldMap: React.FC = () => {
   const labelTiles = "https://{s}.basemaps.cartocdn.com/dark_only_labels/{z}/{x}/{y}{r}.png";
   
   const DEFAULT_STYLE: PathOptions = { 
-      fillColor:  theme === "dark" ? "transparent" : "#8daa92",
+      fillColor:  theme === "dark" ? "transparent" : "#0000000F",
       color:  theme === "dark" ? "#6a6a6a" : "#444444",
       weight: 1.5,
       fillOpacity: 0.5
@@ -45,6 +46,7 @@ const RenderWorldMap: React.FC = () => {
     // Update the map to prevent ghosting when switches themes
   const ThemeSync = ({ theme }: { theme: string }) => {
     const map = useMap();
+    map.zoomControl.setPosition('topright');
 
     useEffect(() => {
       // Tell Leaflet the container might have changed size/style
@@ -90,6 +92,8 @@ const RenderWorldMap: React.FC = () => {
   }, [theme, navigate, DEFAULT_STYLE]);
   
   return (
+    <div className="position-relative w-100 overflow-hidden" style={{ height: 'calc(100vh - 64px)' }}>
+    <MapOverlay />
     <MapContainer
         center={[30, 0]} 
         zoom={3} 
@@ -136,6 +140,7 @@ const RenderWorldMap: React.FC = () => {
         />
         )}
     </MapContainer>
+    </div>
   );
 };
 

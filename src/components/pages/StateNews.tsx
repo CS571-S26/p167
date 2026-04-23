@@ -7,7 +7,7 @@ import countryToLang from '../../languages.json';
 import { supabase } from '../../supabaseClient.ts'
 import ThemeContext from "../../contexts/ThemeContext.ts"
 
-const News = () => {
+const StateNews = () => {
   const [theme] = useContext(ThemeContext) || ["dark"];
   const [loading, setLoading] = useState<boolean>(true);
   const [category, setCategory] = useState<string>('top');
@@ -126,4 +126,4 @@ useEffect(() => {
   );
 };
 
-export default News;
+export default StateNews;

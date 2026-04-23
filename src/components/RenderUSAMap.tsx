@@ -6,6 +6,7 @@ import 'leaflet/dist/leaflet.css';
 import ThemeContext from "../contexts/ThemeContext";
 import '@luomus/leaflet-smooth-wheel-zoom';
 import { useMap } from 'react-leaflet';
+import MapOverlayStates from "./MapOverlayStates";
 
 const RenderUSAMap: React.FC = () => {
   const [theme] = useContext(ThemeContext) || ["dark"];
@@ -21,7 +22,7 @@ const RenderUSAMap: React.FC = () => {
   const darkLabelTiles = "https://{s}.basemaps.cartocdn.com/dark_only_labels/{z}/{x}/{y}{r}.png";
 
   const DEFAULT_STYLE: PathOptions = {
-    fillColor:  theme === "dark" ? "transparent" : "#8daa92",
+    fillColor:  theme === "dark" ? "transparent" : "#0000000F",
     color: theme === "dark" ? "#6a6a6a" : "#2c3e50",
     weight: 1.5,
     fillOpacity: 0.5
@@ -44,6 +45,7 @@ const RenderUSAMap: React.FC = () => {
   // Update the map to prevent ghosting when switches themes
   const ThemeSync = ({ theme }: { theme: string }) => {
     const map = useMap();
+    map.zoomControl.setPosition('topright');
 
     useEffect(() => {
       // Tell Leaflet the container might have changed size/style
@@ -85,7 +87,13 @@ const RenderUSAMap: React.FC = () => {
   }, [theme, navigate, DEFAULT_STYLE]); // Dependencies ensure the function updates
 
   return (
-    <div style={{ background: theme === "dark" ? "#000" : "#aad3df" }}> 
+    <div className="position-relative w-100 overflow-hidden" 
+    style={{ 
+      background: theme === "dark" ? "#000" : "#aad3df",
+      height: 'calc(100vh - 64px)' 
+    }}> 
+    <MapOverlayStates/>
+
       <MapContainer
         center={[38, -97]} 
         zoom={4} 

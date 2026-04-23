@@ -7,6 +7,7 @@ export interface Article {
     description?: string;
     image_url?: string | null;
     pubDate: string;
+    source_name: string;
 }
 
 export interface APIResponse {

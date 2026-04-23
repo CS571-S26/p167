@@ -1,16 +1,20 @@
-import { Card, Col } from "react-bootstrap"
-import type { Article } from "../types"
-import ThemeContext from "../contexts/ThemeContext"
-import TranslationContext from "../contexts/TranslationContext"
-import { useContext, useState, useEffect } from "react"
+import { Col, Button } from "react-bootstrap";
+import type { Article } from "../types";
+import TranslationContext from "../contexts/TranslationContext";
+import { useContext, useState, useEffect } from "react";
 import { useTranslate } from '../hooks/useTranslate';
-import { useSearchParams } from "react-router-dom"
+import { useSearchParams } from "react-router-dom";
+import { useUser } from "../hooks/useUser";
+import { motion } from "framer-motion";
 
 interface NewsCardProps {
   article: Article; 
 }
 
 const NewsCard: React.FC<NewsCardProps> = ({ article }) => {
+  const { user, addArticle, savedArticles, unsaveArticle } = useUser();
+  const thisArticleIsSaved = savedArticles.some(a => a.article_id === article.article_id);
+  
   const [searchParams] = useSearchParams();
   const lang: string = searchParams.get('lang') || '';
   const [displayData, setDisplayData] = useState({
@@ -20,82 +24,85 @@ const NewsCard: React.FC<NewsCardProps> = ({ article }) => {
   const [cache, setCache] = useState<{title: string, description: string} | null>(null);
 
   const { translateBatch, loading } = useTranslate();
-  const [theme] = useContext(ThemeContext) || ["dark"];
   const [translationToggle] = useContext(TranslationContext) || [true];
-  const altImageURL = "https://upload.wikimedia.org/wikipedia/commons/1/14/No_Image_Available.jpg"
+  const altImageURL = "https://upload.wikimedia.org/wikipedia/commons/3/3f/Placeholder_view_vector.svg"
+
+  const handleSaveAction = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    if (!user) return alert("Please log in to save to your archive.");
+    try {
+      thisArticleIsSaved ? await unsaveArticle(article) : await addArticle(article);
+    } catch (err) {
+      console.error("Action failed:", err);
+    }
+  };
   
   useEffect(() => {
     const autoTranslate = async () => {
-      // If the user selected to show the original language, don't translate the text
       if(!translationToggle || lang === "en") { 
-        setDisplayData({
-          title: article.title,
-          description: article.description ?? ""
-        });
+        setDisplayData({ title: article.title, description: article.description ?? "" });
         return; 
       }
-
-      // Check if the translation was already completed, and if so, display a cached version to reduce necessary API calls
-      if (cache) {
-        setDisplayData(cache);
-        return;
-      }
-      
-      const results = await translateBatch(
-        [article.title, article.description ?? ""], 
-        'en'
-      );
-
+      if (cache) { setDisplayData(cache); return; }
+      const results = await translateBatch([article.title, article.description ?? ""], 'en');
       if (results) {
         const [translatedTitle, translatedDescription] = results;
-        setDisplayData({
-          title: translatedTitle,
-          description: translatedDescription
-        });
-        setCache({
-          title: translatedTitle,
-          description: translatedDescription
-        });
+        setDisplayData({ title: translatedTitle, description: translatedDescription });
+        setCache({ title: translatedTitle, description: translatedDescription });
       }
     };
-
     autoTranslate();
   }, [article.article_id, translationToggle]);
 
+  const formatMyDate = (dateString: string) => {
+    // Replace the space with 'T' to ensure cross-browser ISO compatibility
+    const date = new Date(dateString.replace(' ', 'T'));
+
+    return date.toLocaleDateString('en-US', {
+      month: 'long',
+      day: 'numeric'
+    });
+  };
+
   return (
-    <Col 
-      key={article.article_id} 
-      xs={12} sm={12} md={6} lg={4} xl={4} 
-      className="d-flex"
-    >
-      <a 
-        href={article.link} 
-        className="unstyled-link d-flex flex-column flex-fill"
+    <Col xs={12} md={6} lg={4} className="d-flex p-3">
+      <motion.div 
+        className="news-dossier-card"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        whileHover={{ y: -5 }}
+        transition={{ duration: 0.4 }}
       >
-        <Card className={`news-card-${theme} h-100 mb-3`}>
-          {article.image_url ? (
-            <Card.Img 
-              variant="top" 
-              src={article.image_url} 
-              className="object-fit-cover"
-            />
-          ) : (
-            <Card.Img 
-              variant="top" 
-              src={altImageURL} 
-              className="object-fit-cover"
-            />
-          )}
-          <Card.Body className="d-flex flex-column">
-            <Card.Text className="fw-bold">
+        <a href={article.link} target="_blank" rel="noopener noreferrer" className="unstyled-link flex-grow-1">
+          <div className="image-viewport">
+            <img src={article.image_url || altImageURL} alt="News Source" className="dossier-img" />
+          </div>
+
+          <div className="dossier-body">
+            <div className="source-indicator">
+              <div className="pulse-dot-small" />
+              <span>{article.source_name} - {formatMyDate(article.pubDate)}</span>
+            </div>
+
+            <h4 className="dossier-title">
               {loading ? "..." : displayData.title}
-            </Card.Text>
-            <Card.Text className="truncate-text mt-auto">
-              {loading ? "Translating..." : displayData.description}
-            </Card.Text> 
-          </Card.Body>
-        </Card>
-      </a>
+            </h4>
+            
+            <p className="dossier-snippet">
+              {loading ? "Decrypting source text..." : displayData.description}
+            </p>
+          </div>
+        </a>
+
+        <div className="dossier-footer">
+          <Button 
+            className={`w-100 py-2 fw-bold action-btn ${thisArticleIsSaved ? 'btn-saved' : 'btn-unsaved'}`}
+            onClick={handleSaveAction}
+          >
+            {thisArticleIsSaved ? "- Unsave Article" : "+ Save Article"}
+          </Button>
+        </div>
+      </motion.div>
     </Col>
   );
 }

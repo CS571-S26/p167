@@ -182,3 +182,57 @@
     border-right-color: var(--border);
   }
 }
+
+.nav-link.active {
+  font-weight: 600;
+  border-bottom: 2px solid #007bff; /* Add a little "current page" line */
+}
+
+/* Nav Buttons (like profile button) */
+/* 1. Base style for the pill button to ensure it doesn't get the underline */
+.nav-link.nav-pill-btn {
+  border-bottom: none !important; /* Remove the blue line from previous styles */
+  display: flex;
+  align-items: center;
+  transition: all 0.2s ease-in-out;
+}
+
+/* 2. Style for when the button is 'Active' (User is on the profile page) */
+.nav-link.nav-pill-btn.active {
+  background-color: #007bff !important; /* Change background to blue */
+  border-color: #007bff !important;     /* Match border to blue */
+  color: white !important;              /* Ensure text is white */
+}
+
+/* 3. Hover effect for a "button" feel */
+.nav-link.nav-pill-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+.nav-link:hover {
+  color: #007bff !important; /* Matches your active underline color */
+}
+
+/* Shared Toggle Wrapper */
+.theme-toggle-btn:hover {
+  color: inherit !important;
+}
+
+/* Icons common logic */
+.theme-icon-sun, .theme-icon-moon {
+  display: inline-block;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+/* Sun Specific */
+.theme-toggle-btn:hover .theme-icon-sun {
+  color: #ffca28;
+  transform: rotate(180deg) scale(1.2);
+}
+
+/* Moon Specific */
+.theme-toggle-btn:hover .theme-icon-moon {
+  color: #9fa8da;
+  transform: rotate(-20deg) scale(1.2);
+}
