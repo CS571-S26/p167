@@ -12,7 +12,6 @@ interface NewsCardProps {
 }
 
 const NewsCard: React.FC<NewsCardProps> = ({ article }) => {
-  console.log(article);
   const { user, addArticle, savedArticles, unsaveArticle } = useUser();
   const thisArticleIsSaved = savedArticles.some(a => a.article_id === article.article_id);
   

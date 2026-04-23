@@ -91,10 +91,6 @@
   box-sizing: border-box;
 }
 
-body {
-  margin: 0;
-}
-
 .dark-theme {
   --title-gradient: linear-gradient(180deg, #FFFFFF 0%, #777777 100%);
   --glass-bg: rgba(255, 255, 255, 0.04);
@@ -219,16 +215,6 @@ code {
   overflow-wrap: anywhere;
 }
 
-#intro-blurb {
-  font-size:xx-large;
-}
-
-
-/* Make the Leaflet labels pop with a slight glow */
-.leaflet-tile-pane {
-    filter: brightness(1.2) contrast(1.1);
-}
-
 .news-page-dark {
   width: 1126px;
   max-width: 100%;
@@ -302,6 +288,7 @@ body {
   margin: 0;
   min-height: 100vh;
   transition: background-color 0.3s ease; /* Smooth transition when switching */
+  font-family: 'Inter', sans-serif;
 }
 
 .bg-page-light {
@@ -405,12 +392,6 @@ body {
   line-height: 1.5;
   margin: 0;
   font-weight: 400;
-}
-
-  
-body { 
-  font-family: 'Inter', sans-serif; 
-  transition: background-color 0.3s ease; /* Smooths the theme jump */
 }
 
 .tracking-tighter { letter-spacing: -0.06em; }
@@ -518,10 +499,6 @@ body {
   border-color: #0066FF;
   background: var(--about-card-bg-hover);
   transform: translateY(-5px);
-}
-
-.tracking-tighter {
-  letter-spacing: -0.04em;
 }
 
 .text-primary-blue {

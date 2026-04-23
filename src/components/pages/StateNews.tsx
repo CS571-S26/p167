@@ -1,129 +1,105 @@
-import { useState, useEffect, useContext } from "react"
-import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
-import { Button, Container, Row, Col} from 'react-bootstrap';
-import NewsCard from "../NewsCard.tsx"
-import type { APIResponse } from "../../types.ts"
-import countryToLang from '../../languages.json';
-import { supabase } from '../../supabaseClient.ts'
-import ThemeContext from "../../contexts/ThemeContext.ts"
+import { useState, useEffect, useContext } from "react";
+import { useParams } from 'react-router-dom';
+import { Container, Row, Col } from 'react-bootstrap';
+import { motion, AnimatePresence } from 'framer-motion';
+import NewsCard from "../NewsCard.tsx";
+import type { Article } from "../../types.ts";
+import { supabase } from '../../supabaseClient.ts';
+import ThemeContext from "../../contexts/ThemeContext.ts";
 
-const StateNews = () => {
+const CountryNews = () => {
   const [theme] = useContext(ThemeContext) || ["dark"];
+  const isDark = theme === "dark";
   const [loading, setLoading] = useState<boolean>(true);
   const [category, setCategory] = useState<string>('top');
-  const [data, setData] = useState<APIResponse | null>(null);
-  const { countryName } = useParams<{ countryName: string }>(); // Get the country name from the URL
+  const [data, setData] = useState<Article[] | null>(null);
   const { stateName } = useParams<{stateName: string}>(); // Get the state name from the URL, if it is there
-  const [searchParams] = useSearchParams();
-  let isoCode: string = searchParams.get('iso') || ''; // Get the ISO short code for API fetch request
-  const navigate = useNavigate();
-  const countryLanguage = (countryToLang as Record<string, string>)[isoCode.toLowerCase()] || 'en';
 
-  // TODO: Remove this when implementation of secondary API is done
-  if(stateName) {
-    return <h1>News for individual US States is coming soon</h1>
-  }
-
-  // Handle API issues
-  if(isoCode == "SS") {
-    isoCode = "SD"; // Fixes issue with South Sudan by showing Sudan news, South Sudan is not handled by the API properly
-  }
-  if (isoCode == "GL") {
-    isoCode = "DK" // Convert Greenland's iso code to Denmark's, the API does not handle Greenland as a seperate country
-  }
-
-  // Get the data from the news API
   const fetchData = async () => {
-    const { data, error } = await supabase.functions.invoke('news-proxy', {
-      body: { 
-        // Only passes the value if it exists
-        isoCode: isoCode, 
-        countryLanguage: countryLanguage,
-        category: category,
+    setLoading(true);
+    const { data, error } = await supabase.functions.invoke('news-proxy-us-states', {
+      body: { category, stateName }
+    });
 
-        // Conditional logic for US States map
-        ...(stateName && { 
-          region: stateName,
-          isoCode: "US"
-        })
-      }
-    })
-
-  if (error) {
-    console.error('Error fetching news:', error)
-  } else {
-    setData(data);
-    setLoading(false);
-  }
-}
-
-// Reload the page on initial mount and when the user selects a new category
-useEffect(() => {
-  fetchData();
-  }, [category]);
-
-  return (
-    <Container className={`news-page-${theme}`}>
-      <h1>News for {countryName}</h1>
-      <Button 
-        variant="primary"
-        onClick={() => navigate('/worldmap')}
-        className="rounded-pill px-4 me-2 shadow-sm"
-      >
-        Back to Map
-      </Button>
-      
-      <hr/>
-      {/* Category Filters */}
-      <div className="category-filters mb-4">
-        <Button 
-          variant={category === 'top' ? 'primary' : 'outline-primary'}
-          onClick={() => setCategory('top')}
-          className="rounded-pill px-4 me-2 shadow-sm"
-        >
-          Top News
-        </Button>
-
-        <Button 
-          variant={category === 'politics' ? 'primary' : 'outline-primary'} 
-          onClick={() => setCategory('politics')}
-          className="rounded-pill px-4 me-2 shadow-sm"
-        >
-          Politics
-        </Button>
-
-        <Button 
-          variant={category === 'technology' ? 'primary' : 'outline-primary'} 
-          onClick={() => setCategory('technology')}
-          className="rounded-pill px-4 me-2 shadow-sm"
-        >
-          Tech
-        </Button>
-      </div>
-      
-      {loading ? 
-      (
-      <Row>
-        {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((i) => (
-          <Col key={i} xs={12} sm={12} md={6} lg={4} xl={4} className="mb-4">
-            <div className="skeleton-card" style={{ height: '300px', background: '#eee', borderRadius: '8px' }} />
-          </Col>
-        ))}
-      </Row>
-      )
-      :
-      <div>
-      {data && data.results && data.results.length > 0 ?
-      <Row>{data.results.map(s => <NewsCard key={s.article_id} article={s} />)}</Row> :
-      stateName 
-        ? <p>There is no current news for {stateName}</p>
-        : <p>There is no current news for {countryName}</p>
-      }
-      </div>
+    if (error) {
+      console.error('Error:', error);
+    } else {
+      setData(data);
+      setLoading(false);
     }
-     
-    </Container>
+  }
+  
+  useEffect(() => {
+    fetchData();
+  }, [category]);
+  
+  return (
+    <div className={`news-page-container ${isDark ? 'dark-theme' : ''}`}>
+      <Container>
+        {/* Header */}
+        <header className="mb-5">
+          <div className="d-flex align-items-center gap-2 mb-2">
+            <div className="pulse-dot" />
+            <span className="status-text text-primary" style={{ letterSpacing: '0.3em', fontSize: '0.7rem', fontWeight: 800 }}>
+              World News Mapper
+            </span>
+          </div>
+          <h1 className="display-4 fw-bold tracking-tighter mb-4">
+            News for <span className="text-primary-blue">{stateName}</span>
+          </h1>
+
+          {/* Category Filters */}
+          <div className="d-flex flex-wrap gap-2">
+            {['top', 'politics', 'technology', 'business', 'science'].map((cat) => (
+              <button 
+                key={cat}
+                className={`category-pill ${category === cat ? 'active' : ''}`}
+                onClick={() => setCategory(cat)}
+              >
+                {cat === 'top' ? 'Headlines' : cat}
+              </button>
+            ))}
+          </div>
+        </header>
+
+        <AnimatePresence mode="wait">
+          {loading ? (
+            <motion.div 
+              key="loader"
+              initial={{ opacity: 0 }} 
+              animate={{ opacity: 1 }} 
+              exit={{ opacity: 0 }}
+            >
+              <Row>
+                {[1, 2, 3, 4, 5, 6].map((i) => (
+                  <Col key={i} md={6} lg={4} className="mb-4">
+                    <div className="skeleton-glass" style={{ height: '400px' }} />
+                  </Col>
+                ))}
+              </Row>
+            </motion.div>
+          ) : (
+            <motion.div 
+              key="content"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+            >
+              {data && data.length > 0 ? (
+                <Row className="g-4">
+                  {data.map(s => <NewsCard key={s.article_id} article={s}/>)}
+                </Row>
+              ) : (
+                <div className="text-center py-5 glass-card-substantial">
+                  <p className="opacity-50">No news found for {stateName} in this category.</p>
+                </div>
+              )}
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </Container>
+    </div>
   );
 };
 
-export default StateNews;
+export default CountryNews;

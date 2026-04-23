@@ -1,8 +1,24 @@
+import type { NewsAPIArticle, Article} from "../../../src/news-types.ts"
+
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
   'Access-Control-Allow-Methods': 'POST, OPTIONS',
 }
+
+const mapNewsToArticle = (news: NewsAPIArticle, category: string): Article => {
+  return {
+    // NewsAPI doesn't provide a unique ID, so the URL is the safest unique identifier
+    article_id: news.url || crypto.randomUUID(), 
+    title: news.title,
+    link: news.url || '',
+    description: news.description || undefined,
+    image_url: news.urlToImage,
+    pubDate: news.publishedAt,
+    source_name: news.source.name,
+    category: [category], 
+  };
+};
 
 Deno.serve(async (req) => {
   // Handle Preflight
@@ -15,22 +31,22 @@ Deno.serve(async (req) => {
 
   try {
     // Parse the body
-    const { isoCode, countryLanguage, category, region } = await req.json()
+    const { category, stateName } = await req.json()
 
-    const API_KEY = Deno.env.get('NEWSDATA_API_KEY')
+    const API_KEY = Deno.env.get('NEWSAPI_API_KEY')
     if (!API_KEY) throw new Error("Missing API Key")
 
-    let url = `https://newsdata.io/api/1/latest?apikey=${API_KEY}&country=${isoCode}&language=${countryLanguage}&category=domestic,${category}&removeduplicate=1&datatype=news`
-
-    if (region) {
-      url += `&region=${region}`
-    }
+    const url = `https://newsapi.org/v2/everything?apiKey=${API_KEY}&q="${stateName}" AND ${category}`
 
     const response = await fetch(url)
     const data = await response.json()
 
+    const formattedArticles: Article[] = data.articles.map((item: NewsAPIArticle) => 
+      mapNewsToArticle(item, category)
+    );
+
     // Return successful response with CORS headers
-    return new Response(JSON.stringify(data), {
+    return new Response(JSON.stringify(formattedArticles), {
       status: 200,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     })
