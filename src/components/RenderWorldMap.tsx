@@ -72,6 +72,19 @@ const RenderWorldMap: React.FC = () => {
       opacity: 0.9
     });
 
+    // Accessibility: Set aria-label on the SVG path
+    // Uses a small timeout or wait for the 'add' event to ensure the element exists in the DOM
+    layer.on('add', (e) => {
+      const element = (e.target as any).getElement();
+      if (element) {
+        const countryName = feature.properties.name;
+        element.setAttribute('aria-label', `Select ${countryName}`);
+        element.setAttribute('role', 'button'); 
+        element.setAttribute('tabindex', '0'); // Allows keyboard navigation
+        element.removeAttribute('aria-describedby');
+      }
+    });
+
     layer.on({
       mouseover: (e: LeafletMouseEvent) => {
         const target = e.target;
@@ -95,6 +108,7 @@ const RenderWorldMap: React.FC = () => {
     <div className="position-relative w-100 overflow-hidden" style={{ height: 'calc(100vh - 64px)' }}>
     <MapOverlay />
     <MapContainer
+        aria-label = "Interactive map of the world"
         center={[30, 0]} 
         zoom={3} 
         style={{height: 'calc(100vh - 64px)', width: "100%"}}

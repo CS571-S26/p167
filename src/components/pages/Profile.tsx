@@ -17,8 +17,6 @@ const Profile = () => {
     try {
       if (isRegistering) {
         await register(email, password);
-        // Email confirmation is off for now on Supabase, can be enabled later
-        // alert("Check your email for a confirmation link!");
       } else {
         await login(email, password);
       }

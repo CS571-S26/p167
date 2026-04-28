@@ -11,14 +11,14 @@ const MapOverlay: React.FC = () => {
         className="terminal-glass-panel"
       >
         {/* Top Status Header */}
-        <div className="status-header">
+        <h1 className="status-header">
           <motion.div 
             className="pulse-dot"
             animate={{ opacity: [1, 0.4, 1], scale: [1, 1.2, 1] }}
             transition={{ repeat: Infinity, duration: 2 }}
           />
           <span className="status-text">World News Mapper</span>
-        </div>
+        </h1>
 
         {/* Description */}
         <p className="terminal-description">

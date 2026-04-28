@@ -70,7 +70,7 @@ const Home: React.FC = () => {
           <h1 className="display-1 fw-bold mb-2 title-shadow">
             World News Mapper
           </h1>
-          <p className={`lead mx-auto mb-5 ${isDark ? 'text-secondary' : 'text-muted'}`} style={{ maxWidth: '600px', fontWeight: 300 }}>
+          <p className={`lead mx-auto mb-5`} style={{ maxWidth: '600px', fontWeight: 300 }}>
             The world is bigger than your feed <br/>
             <span className="fw-normal opacity-100 text-primary">Open the map to explore local news globally</span>
           </p>
@@ -91,9 +91,9 @@ const Home: React.FC = () => {
                 className="glass-card-substantial p-4 h-100 text-start"
               >
                 <div className="fs-4 mb-3">{item.icon}</div>
-                <h6 className="fw-bold mb-2 text-uppercase small" style={{ letterSpacing: '0.15em' }}>
+                <h1 className="fw-bold mb-2 text-uppercase small" style={{ letterSpacing: '0.15em' }}>
                   {item.title}
-                </h6>
+                </h1>
                 <p className="small opacity-60 mb-0">{item.desc}</p>
                 <div className="shimmer-line" />
               </motion.div>

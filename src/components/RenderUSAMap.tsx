@@ -70,6 +70,19 @@ const RenderUSAMap: React.FC = () => {
       opacity: 0.9
     });
 
+    // Accessibility: Set aria-label on the SVG path
+    // Uses a small timeout or wait for the 'add' event to ensure the element exists in the DOM
+    layer.on('add', (e) => {
+      const element = (e.target as any).getElement();
+      if (element) {
+        const stateName = feature.properties.name;
+        element.setAttribute('aria-label', `Select ${stateName}`);
+        element.setAttribute('role', 'button'); 
+        element.setAttribute('tabindex', '0'); // Allows keyboard navigation
+        element.removeAttribute('aria-describedby');
+      }
+    });
+
     layer.on({
       mouseover: (e: LeafletMouseEvent) => {
         const target = e.target;

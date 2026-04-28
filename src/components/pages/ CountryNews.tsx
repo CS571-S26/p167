@@ -1,5 +1,5 @@
 import { useState, useEffect, useContext } from "react";
-import { useParams, useSearchParams } from 'react-router-dom';
+import { useParams, useSearchParams} from 'react-router-dom';
 import { Container, Row, Col } from 'react-bootstrap';
 import { motion, AnimatePresence } from 'framer-motion';
 import NewsCard from "../NewsCard.tsx";
@@ -54,6 +54,7 @@ const CountryNews = () => {
               World News Mapper
             </span>
           </div>
+       
           <h1 className="display-4 fw-bold tracking-tighter mb-4">
             News for <span className="text-primary-blue">{countryName}</span>
           </h1>
@@ -62,6 +63,7 @@ const CountryNews = () => {
           <div className="d-flex flex-wrap gap-2">
             {['top', 'politics', 'technology', 'business', 'science'].map((cat) => (
               <button 
+                aria-label={category}
                 key={cat}
                 className={`category-pill ${category === cat ? 'active' : ''}`}
                 onClick={() => setCategory(cat)}

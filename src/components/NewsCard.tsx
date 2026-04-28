@@ -75,7 +75,7 @@ const NewsCard: React.FC<NewsCardProps> = ({ article }) => {
       >
         <a href={article.link} target="_blank" rel="noopener noreferrer" className="unstyled-link flex-grow-1">
           <div className="image-viewport">
-            <img src={article.image_url || altImageURL} alt="News Source" className="dossier-img" />
+            <img src={article.image_url || altImageURL} alt={`A thumbnail picture for ${article.title}`}  className="dossier-img" />
           </div>
 
           <div className="dossier-body">
@@ -84,9 +84,9 @@ const NewsCard: React.FC<NewsCardProps> = ({ article }) => {
               <span>{article.source_name} - {formatMyDate(article.pubDate)}</span>
             </div>
 
-            <h4 className="dossier-title">
+            <h1 className="dossier-title">
               {loading ? "..." : displayData.title}
-            </h4>
+            </h1>
             
             <p className="dossier-snippet">
               {loading ? "Decrypting source text..." : displayData.description}

@@ -29,9 +29,9 @@ const About = () => {
           animate="visible"
         >
           <motion.div variants={itemVariants} className="mb-5">
-            <h6 className="fw-bold text-primary-blue mb-2" style={{ letterSpacing: '0.2em' }}>
+            <h1 className="fw-bold text-primary-blue mb-2 small" style={{ letterSpacing: '0.2em' }}>
               PROJECT OVERVIEW
-            </h6>
+            </h1>
             <h1 className="display-4 fw-bold mb-3 tracking-tighter">About World News Mapper</h1>
             <p className="lead opacity-75" style={{ maxWidth: '700px' }}>
               An interactive website built to provide direct access to domestic news perspectives from around the world
@@ -48,7 +48,7 @@ const About = () => {
               <Col key={idx} md={6}>
                 <motion.div variants={itemVariants} className="about-card p-4 h-100">
                   <div className="small fw-bold text-primary-blue mb-1">{spec.label}</div>
-                  <h5 className="fw-bold mb-3">{spec.title}</h5>
+                  <h2 className="fw-bold mb-3">{spec.title}</h2>
                   <p className="opacity-75 m-0" style={{ lineHeight: '1.6' }}>{spec.desc}</p>
                 </motion.div>
               </Col>
