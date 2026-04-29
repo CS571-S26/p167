@@ -211,7 +211,7 @@
 }
 
 .nav-link:hover {
-  color: #ffffff !important; /* Matches your active underline color */
+  transform: translateY(-1px);
 }
 
 /* Shared Toggle Wrapper */
